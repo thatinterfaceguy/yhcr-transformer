@@ -1,0 +1,30 @@
+version: "2"
+services:
+
+ mirth-mysql-data:
+  image: alpine:latest
+  container_name: mirth-mysql-data
+  command: echo Data Container
+  volumes:
+   - /var/lib/mysql
+   
+ mirth-mysql:
+  image: mysql:5.7
+  container_name: mirth-mysql
+  volumes_from: 
+   - mirth-mysql-data
+  environment:
+   - MYSQL_DATABASE=mirthdb
+   - MYSQL_ROOT_PASSWORD=mirth123
+  ports:
+   - 3306:3306
+
+ mirth:
+  image: yhcr/mirth:latest
+  container_name: mirth
+  links:
+   - mirth-mysql:mirth-mysql
+  command: ["./wait-for-it.sh", "-t","0","mirth-mysql:3306","--", "java","-jar","mirth-server-launcher.jar"]
+  ports:
+   - 8080:8080
+   - 8443:8443
