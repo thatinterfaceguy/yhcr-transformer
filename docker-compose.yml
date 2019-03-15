@@ -20,7 +20,7 @@ services:
    - 3306:3306
 
  mirth:
-  image: yhcr/mirth:latest
+  image: roborgan/mirth:latest
   container_name: mirth
   links:
    - mirth-mysql:mirth-mysql
